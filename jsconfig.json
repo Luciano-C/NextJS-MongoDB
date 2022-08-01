@@ -1,0 +1,11 @@
+// https://nextjs.org/docs/advanced-features/module-path-aliases
+
+// Para hacer las importaciones más sencillas
+
+{
+    "compilerOptions": {
+      "baseUrl": "src"
+    }
+  }
+
+  // Se cambia el "." por "src" porque se movieron los archivos a src 
