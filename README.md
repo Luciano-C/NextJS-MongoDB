@@ -37,4 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 https://www.youtube.com/watch?v=SiUM8vYeuu0
 
-Tiempo: 48:24
+Tiempo: 1:35:51
