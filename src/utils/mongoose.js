@@ -13,7 +13,7 @@ export async function dbConnect() {
     // Actualiza conn.isConnected a true
     conn.isConnected = db.connections[0].readyState;
     // Muestra a que base de datos se conecta
-    console.log(db.connection.db.databaseName);
+    //console.log(db.connection.db.databaseName);
 }
 
 // Objeto con una serie de eventos para detectar errores, cosas que pasen o si la conexión está ok

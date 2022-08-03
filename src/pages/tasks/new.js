@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Form, Grid, Button } from "semantic-ui-react"
 import { useRouter } from 'next/router';
 
@@ -32,7 +32,11 @@ const TaskFormPage = () => {
         let errors = validate();
         // Si hay keys en errors => asigna el valor a la variable de estado errors. El "return" asegura que no continúa con lo de abajo.
         if (Object.keys(errors).length) return setErrors(errors);
-        await createTask();
+        if (router.query.id) {
+            await updateTask();
+        } else {
+            await createTask();
+        }
         router.push("/");
     }
 
@@ -52,9 +56,36 @@ const TaskFormPage = () => {
         }
     }
 
+    const updateTask = async () => {
+        try {
+            await fetch(`http://localhost:3000/api/tasks/${router.query.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newTask)
+
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleChange = (e) =>
         setNewTask({ ...newTask, [e.target.name]: e.target.value })
 
+
+    const getTask = async () => {
+        const res = await fetch(`http://localhost:3000/api/tasks/${router.query.id}`);
+        const data = await res.json();
+        setNewTask({ title: data.title, description: data.description });
+    };
+
+    useEffect(() => {
+        if (router.query.id) { getTask() }
+
+
+    }, [])
 
 
     return (
@@ -66,7 +97,7 @@ const TaskFormPage = () => {
         >
             <Grid.Row>
                 <Grid.Column textAlign='center'>
-                    <h1>Create Task</h1>
+                    <h1>{router.query.id ? "Update Task" : "Create Task"}</h1>
                     <Form onSubmit={handleSubmit}>
                         <Form.Input
                             label="Title"
@@ -74,6 +105,7 @@ const TaskFormPage = () => {
                             name="title"
                             onChange={handleChange}
                             error={errors.title ? { content: "Enter a title", pointing: "below" } : null}
+                            value={newTask.title}
                         />
                         <Form.TextArea
                             label="Description"
@@ -81,8 +113,9 @@ const TaskFormPage = () => {
                             name="description"
                             onChange={handleChange}
                             error={errors.description ? { content: errors.description, pointing: "below" } : null}
+                            value={newTask.description}
                         />
-                        <Button primary>Save</Button>
+                        <Button primary>{router.query.id ? "Update" : "Save"}</Button>
                     </Form>
                 </Grid.Column>
             </Grid.Row>
